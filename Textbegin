@@ -1,0 +1,29 @@
+Sub UpdateTextInCellsDynamic()
+    ' Step 1: Copy and paste formula from "My Schedule" A2 to A3 as plain text
+    Sheets("My Schedule").Range("A3").Value = Sheets("My Schedule").Range("A2").Value
+    
+    ' Step 2: Copy text from "My Schedule" A2
+    Dim copiedText As String
+    copiedText = Sheets("My Schedule").Range("A2").Text
+    
+    ' Step 3: Delete date pattern in "My new Schedule" B2 using a regular expression
+    Dim regexPattern As String
+    regexPattern = "\b\d{1,2}/\d{1,2}/\d{4}\b" ' Matches the MM/DD/YYYY pattern
+    
+    Dim originalText As String
+    originalText = Sheets("My new Schedule").Range("B2").Value
+    Sheets("My new Schedule").Range("B2").Value = RegExpReplace(originalText, regexPattern, "")
+    
+    ' Step 4: Paste copied text into "My new Schedule" B2
+    Sheets("My new Schedule").Range("B2").Value = Sheets("My new Schedule").Range("B2").Value & copiedText
+End Sub
+
+Function RegExpReplace(ByVal text As String, ByVal replacePattern As String, ByVal replaceWith As String) As String
+    Dim regex As Object
+    Set regex = CreateObject("VBScript.RegExp")
+
+    regex.Global = True
+    regex.Pattern = replacePattern
+
+    RegExpReplace = regex.Replace(text, replaceWith)
+End Function
